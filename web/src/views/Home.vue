@@ -25,12 +25,17 @@ export default {
     };
   },
   created() {
-    let self = this;
-    fetch(`/books/`)
-      .then(res => res.json())
-      .then(res => {
-        self.bookList = res.data;
-      });
+    this.initBookList();
+  },
+  methods: {
+    async getFetch(url, data) {
+      let response = await fetch(url);
+      return await response.json();
+    },
+    async initBookList() {
+      let { bookList } = await this.getFetch("/books");
+      this.bookList = bookList;
+    }
   }
 };
 </script>

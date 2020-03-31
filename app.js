@@ -8,7 +8,10 @@ const logger = require('koa-logger')
 const koaWebpack = require('koa-webpack')
 const index = require('./routes/index')
 const webpackConfig = require('./web/webpack.config.js')
-const { ApolloServer, gql } = require('apollo-server-koa');
+const { ApolloServer } = require('apollo-server-koa');
+const { typeDefs } = require('./graphql/schema');
+const { resolvers } = require('./graphql/resolvers');
+
 
 const isProd = process.env.NODE_ENV === 'production';
 // error handler
@@ -22,7 +25,7 @@ app.use(views(__dirname + '/views', {
 
 // middlewares
 app.use(bodyparser({
-  enableTypes:['json', 'form', 'text']
+  enableTypes: ['json', 'form', 'text']
 }))
 app.use(json())
 app.use(logger())
@@ -60,23 +63,15 @@ app.use(async (ctx, next) => {
   await next()
 })
 
-// Construct a schema, using GraphQL schema language
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
+// 创建graphql server
+const server = new ApolloServer({
+  typeDefs,
+  resolvers
+});
 
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
-};
-
-const server = new ApolloServer({ typeDefs, resolvers });
-
-server.applyMiddleware({ app });
+server.applyMiddleware({
+  app
+});
 // alternatively you can get a composed middleware from the apollo server
 // app.use(server.getMiddleware());
 
@@ -94,7 +89,9 @@ async function registerWebpack() {
   })
 }
 
-app.listen({ port: 4000 }, () =>
+app.listen({
+    port: 4000
+  }, () =>
   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`),
 );
 
