@@ -1,0 +1,45 @@
+
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+#nav {
+  padding: 30px;
+}
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
+
+.books[data-v-5f6ad2da] {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+}
+.books .book-item[data-v-5f6ad2da] {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.books .book-item-img[data-v-5f6ad2da] {
+  margin-right: 8px;
+  width: 40px;
+}
+a[data-v-5f6ad2da] {
+  font-weight: bold;
+  color: #2c3e50;
+}
+a[data-v-5f6ad2da]:hover {
+  color: #42b983;
+}
+a.router-link-exact-active[data-v-5f6ad2da] {
+  color: #42b983;
+}
+

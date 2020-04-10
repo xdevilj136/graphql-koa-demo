@@ -1,16 +1,13 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlwebpackPlugin = require('html-webpack-plugin')
-const {CleanWebpackPlugin} = require('clean-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const VueLoader = require('vue-loader/lib/plugin')
 
 const resolvePath = inputPath => path.join(__dirname, inputPath)
-const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
-	mode: isProd ? 'production' : 'development',
+	mode: 'development',
 	// devServer: {
 	// 	hot: true
 	// },
@@ -19,7 +16,7 @@ module.exports = {
   },
   output: {
     filename: '[name].[hash:8].js',
-    path: isProd ? resolvePath('../vue-dist') : resolvePath('dist'),
+    path: resolvePath('dist'),
     publicPath: '/'
   },
   resolve: {
@@ -30,17 +27,12 @@ module.exports = {
     }
   },
   plugins: [
-		isProd ? new CleanWebpackPlugin() : ()=>{},
     new VueLoader(),
     // 输出 index.html 到 output
     new HtmlwebpackPlugin({
       template: resolvePath('./index.html')
     }),
     new webpack.ProgressPlugin(),
-    isProd ? new MiniCssExtractPlugin({
-      filename: 'main.[chunkhash].css'
-		}) : ()=>{},
-		// new webpack.HotModuleReplacementPlugin() //热更新插件
   ],
 
   module: {
@@ -58,7 +50,7 @@ module.exports = {
       {
         test: /\.less$/,
         use: [
-          isProd ? MiniCssExtractPlugin.loader : 'vue-style-loader',
+          'vue-style-loader',
           'css-loader',
           'less-loader'
         ]
@@ -66,7 +58,7 @@ module.exports = {
       {
         test: /.css$/,
         use: [
-          isProd ? MiniCssExtractPlugin.loader : 'vue-style-loader',
+          'vue-style-loader',
           {
             loader: 'css-loader',
             options: {

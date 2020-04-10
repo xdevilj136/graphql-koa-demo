@@ -6,9 +6,8 @@ const books = require('../controller/books');
 //   ctx.redirect('/index.html'); 
 // })
 
-router.get('/books/', books.all);
+router.post('/fetchBookList/', books.fetchBookList);
 router.get('/fetchBookInfoById/', books.fetchBookInfoById);
 router.get('/fetchAuthorInfoByName/', books.fetchAuthorInfoByName);
-router.post('/fetchBookInfoByName/', books.fetchBookInfoByName);
 
 module.exports = router

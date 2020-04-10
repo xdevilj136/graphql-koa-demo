@@ -1,5 +1,7 @@
 <template>
   <div class="home">
+    <button @click="getgraphql">获取graphql</button>
+
     <h1>Book List:</h1>
     <ul class="books">
       <router-link
@@ -16,6 +18,8 @@
 </template>
 
 <script>
+import { gql } from "apollo-boost";
+
 export default {
   name: "List",
   components: {},
@@ -28,13 +32,35 @@ export default {
     this.initBookList();
   },
   methods: {
-    async getFetch(url, data) {
-      let response = await fetch(url);
+    async postFetch(url, data) {
+      let response = await fetch(url, {
+        body: JSON.stringify(data || {}), // must match 'Content-Type' header
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST" // *GET, POST, PUT, DELETE, etc.
+      });
       return await response.json();
     },
     async initBookList() {
-      let { bookList } = await this.getFetch("/books");
+      // 查询所有书籍列表
+      let { bookList } = await this.postFetch("/fetchBookList", {});
       this.bookList = bookList;
+    },
+    getgraphql() {
+      this.graphqlClient
+        .query({
+          query: gql`
+            query GetBookList {
+              bookList {
+                _id
+                name
+              }
+            }
+          `,
+          fetchPolicy: 'network-only'  // default 'cache-first'
+        })
+        .then(result => console.log(result));
     }
   }
 };

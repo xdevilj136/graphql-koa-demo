@@ -2,17 +2,17 @@
   <div class="book-info">
     <div class="book-detail">
       <img alt :src="bookInfo.img" width="260" />
-      <p>{{bookInfo.name}}</p>
-      <p v-if="bookInfo.isbn">isbn: {{bookInfo.isbn}}</p>
+      <p>{{ bookInfo.name }}</p>
+      <p v-if="bookInfo.isbn">isbn: {{ bookInfo.isbn }}</p>
     </div>
     <div class="author-detail">
-      <p>作者：{{bookInfo.author}}</p>
+      <p>作者：{{ bookInfo.author }}</p>
       <p>出版书籍：</p>
       <div class="publish-books">
-        <div class="book-item" v-for="(publishBook,index) in publishBooks" :key="index">
+        <div class="book-item" v-for="(publishBook, index) in publishBooks" :key="index">
           <img alt :src="publishBook.img" height="60" />
-          <p>{{publishBook.name}}</p>
-          <p v-if="publishBook.isbn">isbn: {{publishBook.isbn}}</p>
+          <p>{{ publishBook.name }}</p>
+          <p v-if="publishBook.isbn">isbn: {{ publishBook.isbn }}</p>
         </div>
       </div>
     </div>
@@ -50,22 +50,25 @@ export default {
       return await response.json();
     },
     async fetchDetailInfo() {
+      // 查询书籍详情
       this.bookId = this.$route.params.id;
       let { bookInfo } = await this.getFetch(
         `/fetchBookInfoById?id=${this.bookId}`
       );
       console.log("bookInfo", bookInfo);
       this.bookInfo = bookInfo;
+      // 根据书籍作者名称查询作者详情
       let author = bookInfo.author;
       let { authorInfo } = await this.getFetch(
         `/fetchAuthorInfoByName?name=${author}`
       );
       console.log("authorInfo", authorInfo);
-      let { publishBookInfo } = await this.postFetch("/fetchBookInfoByName", {
+      // 查询作者出版的其他书籍详情
+      let { bookList } = await this.postFetch("/fetchBookList", {
         names: authorInfo.books
       });
-      console.log("publishBookInfo", publishBookInfo);
-      this.publishBooks = publishBookInfo;
+      console.log("bookList", bookList);
+      this.publishBooks = bookList;
     }
   }
 };
@@ -92,4 +95,5 @@ export default {
     margin-right: 8px;
   }
 }
-</style>>
+</style
+>>

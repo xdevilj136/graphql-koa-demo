@@ -1,0 +1,21 @@
+.book-info[data-v-62142062] {
+  display: flex;
+  justify-content: center;
+}
+.book-info .book-detail[data-v-62142062] {
+  margin-right: 20px;
+}
+.author-detail[data-v-62142062] {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-flow: column;
+}
+.publish-books[data-v-62142062] {
+  display: flex;
+  justify-content: center;
+}
+.publish-books .book-item[data-v-62142062] {
+  margin-right: 8px;
+}
+

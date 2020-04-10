@@ -43,22 +43,24 @@ const resolvers = {
  * */
 // const resolvers = {
 //   Query: {
-//     bookList(){return [{
-//         author: "Stoyan Stefanov",
-//         img: "https://www.safaribooksonline.com/library/cover/9781449336059/250w/",
-//         isbn: "978-1449320195",
-//         name: "JavaScript for PHP Developers",
-//         url: "http://books.google.co.in/books?id=QT56xKb-S3sC",
-//         _id: "53de0a545ac981c45fc30acd"
-//       },
-//       {
-//         author: "Stoyan Stefanov",
-//         isbn: "978-1449320195",
-//         name: "JavaScript for PHP Developers",
-//         url: "http://books.google.co.in/books?id=QT56xKb-S3sC",
-//         _id: "53de0a545ac981c45fc30acd"
-//       }
-//     ]},
+//     bookList() {
+//       return [{
+//           author: "Stoyan Stefanov",
+//           img: "https://www.safaribooksonline.com/library/cover/9781449336059/250w/",
+//           isbn: "978-1449320195",
+//           name: "JavaScript for PHP Developers",
+//           url: "http://books.google.co.in/books?id=QT56xKb-S3sC",
+//           _id: "53de0a545ac981c45fc30acd"
+//         },
+//         {
+//           name: "Maintainable JavaScript - Writing Readable Code",
+//           author: "Nicholas C. Zakas",
+//           isbn: "978-1449327682",
+//           url: "http://www.amazon.com/Maintainable-JavaScript-Nicholas-C-Zakas/dp/1449327680",
+//           _id: "53de0a545ac981c45fc30abb"
+//         }
+//       ]
+//     },
 //     bookInfo(parent, args, context, info) {
 //       return {
 //         author: "Stoyan Stefanov",

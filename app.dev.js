@@ -5,7 +5,9 @@ const json = require("koa-json");
 const bodyparser = require("koa-bodyparser");
 const logger = require("koa-logger");
 const staticServer = require("koa-static");
+const koaWebpack = require("koa-webpack");
 const index = require("./routes/index");
+const webpackConfig = require("./web/webpack.dev.config.js");
 const { ApolloServer } = require("apollo-server-koa");
 const { typeDefs } = require("./graphql/schema");
 const { resolvers } = require("./graphql/resolvers");
@@ -31,9 +33,6 @@ app.use(json());
 // routes allowedMethods方法自动设置status、丰富response的header
 app.use(index.routes(), index.allowedMethods());
 
-// 静态文件服务
-app.use(staticServer(__dirname + '/vue-dist'))
-
 // logger
 app.use(async (ctx, next) => {
   const start = new Date();
@@ -47,11 +46,16 @@ app.on("error", (err, ctx) => {
   console.error("server error", err, ctx);
 });
 
+app.use(async (ctx, next) => {
+  await registerWebpack();
+  await next();
+});
+
 // 创建graphql server
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  debug: false 
+  debug: true
 });
 
 server.applyMiddleware({
@@ -59,6 +63,20 @@ server.applyMiddleware({
 });
 // alternatively you can get a composed middleware from the apollo server
 // app.use(server.getMiddleware());
+
+async function registerWebpack() {
+  return new Promise(resolve => {
+    koaWebpack({
+      config: webpackConfig,
+      devMiddleware: {
+        stats: "minimal"
+      }
+    }).then(middleware => {
+      app.use(middleware);
+      resolve();
+    });
+  });
+}
 
 app.listen({ port: 4000 }, () =>
   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)

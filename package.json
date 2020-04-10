@@ -4,12 +4,15 @@
   "private": true,
   "scripts": {
     "start": "node app",
-    "dev": "./node_modules/.bin/nodemon app",
+    "dev": "./node_modules/.bin/nodemon app.dev",
     "prd": "pm2 start app",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cross-env NODE_ENV=production webpack --config web/webpack.config.js"
+    "build": "cross-env NODE_ENV=production webpack --config web/webpack.prod.config.js"
   },
   "dependencies": {
+    "apollo-boost": "^0.4.7",
+    "apollo-cache-inmemory": "^1.6.5",
+    "apollo-link-http": "^1.5.16",
     "apollo-server-koa": "^2.11.0",
     "debug": "^4.1.1",
     "ejs": "^2.3.4",
@@ -19,7 +22,6 @@
     "koa-convert": "^1.2.0",
     "koa-json": "^2.0.2",
     "koa-logger": "^3.2.0",
-    "koa-onerror": "^4.1.0",
     "koa-route": "^3.2.0",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
