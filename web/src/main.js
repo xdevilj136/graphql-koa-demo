@@ -4,36 +4,20 @@ import router from './router'
 import ApolloClient from 'apollo-boost';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpLink } from 'apollo-link-http';
-import { onError } from "apollo-link-error";
 
-// 集中错误处理
-const errorLink = onError(({ response, operation, graphQLErrors, networkError }) => {
-  if (graphQLErrors)
-    graphQLErrors.forEach(({ message, locations, path }) =>
-      console.log(
-        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-      )
-    );
-  if (networkError){
-    // console.log(`[Network error]: ${networkError}`);
-  } 
-});
-
+// 提供客户端通过http链接请求graphql接口
 const httpLink = new HttpLink({
-  uri: 'http://localhost:4000/graphql',
-  // Additional fetch options like `credentials` or `headers`
+  // 可增加请求选项和 http headers 
   credentials: 'same-origin'
 });
 
-const link = httpLink.concat(errorLink);
-
 const client = new ApolloClient({
-  link,
-  cache: new InMemoryCache()
+  httpLink,
+  cache: new InMemoryCache()  // 处理graphql本地缓存的组件
 });
 
-Vue.config.productionTip = false;
 Vue.prototype.graphqlClient = client;
+Vue.config.productionTip = false;
 
 new Vue({
   router,

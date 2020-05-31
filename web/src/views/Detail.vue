@@ -9,7 +9,11 @@
       <p>作者：{{ bookInfo.author }}</p>
       <p>出版书籍：</p>
       <div class="publish-books">
-        <div class="book-item" v-for="(publishBook, index) in publishBooks" :key="index">
+        <div
+          class="book-item"
+          v-for="(publishBook, index) in publishBooks"
+          :key="index"
+        >
           <img alt :src="publishBook.img" height="60" />
           <p>{{ publishBook.name }}</p>
           <p v-if="publishBook.isbn">isbn: {{ publishBook.isbn }}</p>
@@ -20,6 +24,8 @@
 </template>
 
 <script>
+import { gql } from "apollo-boost";
+
 export default {
   name: "Detail",
   components: {},
@@ -27,12 +33,17 @@ export default {
     return {
       bookId: "",
       bookInfo: {},
-      authorDetail: {},
       publishBooks: []
     };
   },
   created() {
-    this.fetchDetailInfo();
+    // this.fetchDetailInfo();
+    this.getGraphqlBookDetail().then(res=>{
+      console.log(res)
+      let bookDetail = res.data.bookDetail;
+      this.bookInfo = bookDetail.bookInfo;
+      this.publishBooks = bookDetail.authorInfo.books;
+    });
   },
   methods: {
     async getFetch(url, data) {
@@ -69,6 +80,32 @@ export default {
       });
       console.log("bookList", bookList);
       this.publishBooks = bookList;
+    },
+    // graphql接口查询书籍列表
+    getGraphqlBookDetail() {
+      this.bookId = this.$route.params.id;
+      return this.graphqlClient.query({
+        query: gql`
+          {
+            bookDetail(id: "${this.bookId}") {
+              bookInfo {
+                name
+                img
+                isbn 
+                author
+              }
+              authorInfo {
+                books {
+                  name
+                  img
+                  isbn
+                }
+              }
+            }
+          }
+        `,
+        fetchPolicy: "network-only" // default 'cache-first'
+      });
     }
   }
 };
@@ -94,6 +131,5 @@ export default {
   .book-item {
     margin-right: 8px;
   }
-}
-</style
+}</style
 >>

@@ -7,8 +7,8 @@ const authors = db.get('authors');
 
 const resolvers = {
   Query: {
+    // 根据书名查询书籍信息
     bookList(parent, args, context, info) {
-      // 根据书名查询书籍信息
       const names = args.names;
       let params = Array.isArray(names) ? {
         name: {
@@ -21,67 +21,31 @@ const resolvers = {
         }
       });
     },
-    // 根据id查询书籍信息
-    bookInfo(parent, args, context, info) {
+    // 根据id查询书籍详情
+    async bookDetail(parent, args, context, info){
       const id = args.id;
-      return books.findOne({
+      const bookInfo = await books.findOne({
         _id: id
       });
-    },
-    // 根据作者名称查询作者信息
-    authorInfo(parent, args, context, info) {
-      const name = args.name;
-      return authors.findOne({
-        name
+      const authorInfo = await authors.findOne({
+        name: bookInfo.author
       });
+      let params = {
+        name:{
+          $in: authorInfo.books
+        }
+      }
+      const otherBookInfos = await books.find(params);
+
+      return {bookInfo, authorInfo:{
+        ...authorInfo,
+        books:otherBookInfos
+      }};
     }
+
   },
 };
 
-/**
- * mock数据测试用
- * */
-// const resolvers = {
-//   Query: {
-//     bookList() {
-//       return [{
-//           author: "Stoyan Stefanov",
-//           img: "https://www.safaribooksonline.com/library/cover/9781449336059/250w/",
-//           isbn: "978-1449320195",
-//           name: "JavaScript for PHP Developers",
-//           url: "http://books.google.co.in/books?id=QT56xKb-S3sC",
-//           _id: "53de0a545ac981c45fc30acd"
-//         },
-//         {
-//           name: "Maintainable JavaScript - Writing Readable Code",
-//           author: "Nicholas C. Zakas",
-//           isbn: "978-1449327682",
-//           url: "http://www.amazon.com/Maintainable-JavaScript-Nicholas-C-Zakas/dp/1449327680",
-//           _id: "53de0a545ac981c45fc30abb"
-//         }
-//       ]
-//     },
-//     bookInfo(parent, args, context, info) {
-//       return {
-//         author: "Stoyan Stefanov",
-//         img: "https://www.safaribooksonline.com/library/cover/9781449336059/250w/",
-//         isbn: "978-1449320195",
-//         name: "JavaScript for PHP Developers",
-//         url: "http://books.google.co.in/books?id=QT56xKb-S3sC",
-//         _id: "53de0a545ac981c45fc30acd"
-//       }
-//     },
-//     authorInfo(parent, args, context, info) {
-//       return {
-//         "_id": "test001",
-//         "name": "Stoyan Stefanov",
-//         "address": "Los Angeles, California",
-//         "company": "Yahoo",
-//         "books": ["JavaScript Patterns", "Object-Oriented Javascript", "Book of Speed [Online]", "JavaScript for PHP Developers"]
-//       }
-//     }
-//   },
-// };
 
 module.exports = {
   resolvers

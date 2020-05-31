@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <button @click="getgraphql">获取graphql</button>
+    <!-- <button @click="getgraphql">获取graphql</button> -->
 
     <h1>Book List:</h1>
     <ul class="books">
@@ -10,7 +10,7 @@
         :key="index"
         :to="'/detail/'+encodeURIComponent(book._id)"
       >
-        <img class="book-item-img" :src="book.img" alt />
+        <img class="book-item-img" :src="book.image" alt />
         <span>{{ book.name }}</span>
       </router-link>
     </ul>
@@ -44,23 +44,28 @@ export default {
     },
     async initBookList() {
       // 查询所有书籍列表
-      let { bookList } = await this.postFetch("/fetchBookList", {});
-      this.bookList = bookList;
+      // let { bookList } = await this.postFetch("/fetchBookList", {});
+      // this.bookList = bookList;
+      this.getGraphqlBookList().then(res=>{
+        let bookList = res.data.bookList;
+        this.bookList = bookList;
+      })
     },
-    getgraphql() {
-      this.graphqlClient
+    // graphql接口查询书籍列表
+    getGraphqlBookList() {
+      return this.graphqlClient
         .query({
           query: gql`
             query GetBookList {
               bookList {
                 _id
                 name
+                img
               }
             }
           `,
           fetchPolicy: 'network-only'  // default 'cache-first'
         })
-        .then(result => console.log(result));
     }
   }
 };

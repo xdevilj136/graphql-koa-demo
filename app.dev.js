@@ -78,8 +78,8 @@ async function registerWebpack() {
   });
 }
 
-app.listen({ port: 4000 }, () =>
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+app.listen({ port: 8000 }, () =>
+  console.log(`🚀 Server ready at http://localhost:8000${server.graphqlPath}`)
 );
 
 module.exports = app;
